@@ -1,9 +1,11 @@
-This is a code snippet to pull youtube videos from a public channel. 
+This project has experiements on youtube javascript api.
 
-This is written on the available javascript library at 
-https://developers.google.com/youtube/
+Currently there are two demos
 
-This is derived from the following api
-https://developers.google.com/youtube/v3/docs/search
+1. Pulling channel Videos from youtube (click here: http://srikantmatihali.github.io/youtube-channel-javascript-v3/channel-videos.html)
+2. Creating custom iframe player with playlist embeded.(click here: http://srikantmatihali.github.io/youtube-channel-javascript-v3/playlist-videos.html)
 
-Modifications and Additions to the code is appreciated.
+
+Check the demo link here: http://srikantmatihali.github.io/youtube-channel-javascript-v3/
+
+
