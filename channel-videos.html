@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+  <style>
+	#youtube-channel,#video_loadmore{
+		background-color: #f9f9f9;
+	}
+	#youtube-channel a{
+		text-decoration:none;
+	}
+    ul{
+		color: #333;
+		text-shadow: 0 1px 0 #f3f3f3;		
+	}
+	ul li{
+		list-style:none;	
+		border-bottom: 1px solid #ccc;		
+	}
+	.more_album {
+		display: block;
+		padding: 15px 15px;
+		text-align: center;
+		color: #010101 !important;
+		background: #fecf2b;
+		border-radius: 4px;
+		width: 50%;
+		font-size: 12px;
+		text-transform: uppercase;
+		margin: 0 auto;
+		clear: both;
+		}
+  </style>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>YouTube Channel Plugin (jQuery)</title>
+	<script src="jquery.min.js" type="text/javascript"></script>
+	<script src="search.js" type="text/javascript"></script>
+	<script src="https://apis.google.com/js/client.js?onload=onClientLoad" type="text/javascript"></script>		
+  </head>
+<body>
+	<h1>YOUTUBE CHANNEL DATA PULL - API VERSION 3</h1>
+    <div id="youtube-channel"></div>
+	<br/>
+	<div id="youtubeData">
+		<div class="padding_img" id="video_loadmore" >
+									<a href="#" data-token="" class="more_album" id="wallpaper_more" >Load More Videos</a>
+		</div>
+	</div>
+</body>
+</html>

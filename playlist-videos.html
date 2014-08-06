@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+	#controls {
+		display: block;
+		margin: 10px 30px;
+	}
+	/* style for buttons */ 
+	#start, #stop, #pause, #plus, #minus, #mute 
+	{
+		border: 1px solid# ccc;
+		padding: 5px;
+		border - radius: 10px;
+		width: 60px;
+		margin: 0 10px 0 0;
+	}
+	#
+progressbar {
+    display: block; /* size */
+    width: 500px;
+    height: 20px; /* position and border */
+    position: relative;
+    border: 1px solid# ccc;
+    margin: 10px;
+    border - radius: 20px; /* background color */
+    background - color: #cccccc; /* background gradient */
+    background - image: linear - gradient(top, #fff, #ccc);
+    background - image: -moz - linear - gradient(top, #fff, #ccc);
+    background - image: -webkit - linear - gradient(top, #fff, #fcc);
+    background - image: -o - linear - gradient(top, #fff, #ccc);
+    background - image: -ms - linear - gradient(top, #fff, #ccc); /* shadow */
+    box - shadow: 0 0 10px# ccc;
+}#
+loadingprogress { /* border */
+    border - radius: 20px; /* initial size */
+    height: 20px;
+    width: 0; /* background color */
+    background - color: #9acd00; 
+   /* background gradient */ 
+   background-image: linear-gradient(top, #ffffff, #9acd00); 
+   background-image: -moz-linear-gradient(top, # ffffff, #9acd00); 
+   background-image: -webkit-linear-gradient(top, # ffffff, #9acd00); 
+   background-image: -o-linear-gradient(top, # ffffff, #9acd00); 
+   background-image: -ms-linear-gradient(top, # ffffff, #9acd00); 
+}
+.clearBoth{
+	clear:both;
+}
+#videoData li{
+	float:left;
+	margin-right:5px;
+	list-style:none;
+}
+.videoActive{
+	border:2px solid red;
+	
+}
+  </style> 	
+  </head>		 
+  <body>
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+	
+    <div id="player"></div>
+	 
+	 <div id="controls"> 
+		<button id="start">Play</button> 
+		<button id="stop" >Stop</button> 
+		<button id="pause" >Pause</button> 
+		<button id="previous" >Previous</button> 
+		<button id="next" >Next</button> 
+		<button id="mute" >Mute</button> 
+		<button id="shuffle" >Shuffle</button>
+		<button id="restore" >Re order</button>
+	 </div> 
+	<div id="progressbar"> 
+			<div id="loadingprogress"></div> 
+			<div id="butterfly"></div> 
+	</div>
+	<p class="clearBoth"></p> 
+	<ul id="videoData" >
+	</ul> 
+	 <script src="jquery.min.js" ></script>
+    <script>
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: 'u5wWk7GLOEw',		 
+		  playerVars :{ 'controls':1,
+						'playlist':'MxsNzAHl0nU,L542wgj3l8g,sSKZPDw5nr8'
+						//'playlist':['MxsNzAHl0nU','L542wgj3l8g','sSKZPDw5nr8']
+						},
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      // 4. The API will call this function when the video player is ready.
+      function onPlayerReady(event) {
+        event.target.playVideo();		
+		updateUL();
+      }
+
+      // 5. The API calls this function when the player's state changes.
+      //    The function indicates that when playing a video (state=1),
+      //    the player should play for six seconds and then stop.
+      var done = false;
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          setTimeout(stopVideo, 6000);
+          done = true;
+        }
+      }
+	  
+	  //stops the video
+      function stopVideo() {
+        player.stopVideo();
+      }
+	  
+	  //starts video
+	  function startVideo(){
+		player.playVideo();
+	  }
+	  
+	  //pauses video
+	  function pauseVideo(){
+		player.pauseVideo();
+	  }
+	    
+	  function nextVideo(){
+		player.nextVideo();
+		var id = 'li-'+player.getVideoData().video_id;		
+		highlightvideo(id);	
+	  }
+	  
+	  function previousVideo(){
+		player.previousVideo();
+		var id = 'li-'+player.getVideoData().video_id;
+		highlightvideo(id);	
+	  }
+	 	 
+	  function shufflePlaylist(){
+		 stopVideo();
+		 //console.log(player.getPlaylist());
+		 player.setShuffle(1);
+		 startVideo();
+	  }	 
+	  
+	  function restorePlaylist(){
+		 player.setShuffle(false);
+	  }
+		
+	  function updateUL(){		
+		var liData = '';
+		 var i=0;
+		 var playList = player.getPlaylist();		
+		 $.each(player.getPlaylist() , function(index,value){
+			//console.log(value);			
+			//console.log('http://img.youtube.com/vi/'+value+'/default.jpg');
+			liData += '<li class="singleVid" id="li-'+value+'" data-attr="'+value+'" ><img src="http://img.youtube.com/vi/'+value+'/default.jpg" alt="'+value+'" /></li>';
+			i++;
+		 });
+		$('#videoData').html(liData);		
+	  }	
+		
+	  function highlightvideo(id){
+		$('#videoData li').removeClass('videoActive');
+		$('#'+id).addClass('videoActive');		
+	  }
+	  
+	  
+	  $(document).on( "click", "#stop", function() {
+		stopVideo();
+	  });
+	  
+	  $(document).on( "click", "#start", function() {
+		startVideo();
+	  });
+	  
+	  $(document).on( "click", "#pause", function() {
+		pauseVideo();
+	  });
+	  
+	  $(document).on( "click", "#previous", function() {
+		previousVideo();
+	  });
+	  
+	  $(document).on( "click", "#next", function() {		
+		nextVideo();
+	  });
+	  
+	   $(document).on( "click", "#shuffle", function() {
+		shufflePlaylist();		
+		updateUL();
+	   });
+	   
+	   $(document).on( "click", "#restore", function() {
+		restorePlaylist();
+		updateUL();
+	   });
+	 
+	  
+	  $(document).on("click",".singleVid",function(){
+			var attr = $(this).attr('data-attr');
+			player.loadVideoById(attr);				
+			//highlight text on li.
+			var id= $(this).attr('id');	
+			highlightvideo(id);							
+	  });
+    </script>
+  </body>
+</html>
